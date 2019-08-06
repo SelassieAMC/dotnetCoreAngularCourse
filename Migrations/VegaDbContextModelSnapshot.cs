@@ -24,15 +24,11 @@ namespace Vegas.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ModelId");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ModelId");
 
                     b.ToTable("Features");
                 });
@@ -69,14 +65,6 @@ namespace Vegas.Migrations
                     b.HasIndex("MakeId");
 
                     b.ToTable("Models");
-                });
-
-            modelBuilder.Entity("Vegas.Models.Feature", b =>
-                {
-                    b.HasOne("Vegas.Models.Model", "Model")
-                        .WithMany("Features")
-                        .HasForeignKey("ModelId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Vegas.Models.Model", b =>

@@ -14,10 +14,6 @@ namespace Vegas.Models
         public string Name { get; set; }
         public Make Make { get; set; }
         public int MakeId { get; set; }
-        public ICollection<Feature> Features { get; set; }
-        public Model()
-        {
-            Features = new Collection<Feature>();
-        }
+
     }
 }

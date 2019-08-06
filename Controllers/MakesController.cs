@@ -21,8 +21,9 @@ namespace Vegas.Controllers
         }
         [HttpGet("/api/getMakes")]
         public async Task<IEnumerable<MakeResource>> GetMakes(){
-            var makes = await context.Makes.Include(m=>m.Models).ThenInclude(m=>m.Features).ToListAsync();
+            var makes = await context.Makes.Include(m=>m.Models).ToListAsync();
             return mapper.Map<List<Make>,List<MakeResource>>(makes);
         }
+
     }
 }
