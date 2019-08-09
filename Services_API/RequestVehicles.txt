@@ -1,0 +1,18 @@
+POST https://localhost:5001/api/vehicle/addVehicle HTTP/1.1
+content-type: application/json
+
+{
+    "MakeId":"9",
+    "ModelId":"2",
+    "IsRegistered":"true",
+    "ContactName":"nueve-dos",
+    "VehicleFeatures":[{"FeatureId":"2"},{"FeatureId":"3"}],
+    "ContactPhone":"0000000",
+    "ContactEmail":"aaaa@outlook.com"
+}
+
+###
+GET https://localhost:5001/api/vehicle/deleteVehicle/10 HTTP/1.1
+
+###
+GET https://localhost:5001/api/vehicle/getVehicles HTTP/1.1
