@@ -67,11 +67,82 @@ namespace Vegas.Migrations
                     b.ToTable("Models");
                 });
 
+            modelBuilder.Entity("Vegas.Models.Vehicle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ContactEmail")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("ContactName")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("ContactPhone")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<bool>("IsRegistered");
+
+                    b.Property<int>("MakeId");
+
+                    b.Property<int>("ModelId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MakeId");
+
+                    b.HasIndex("ModelId");
+
+                    b.ToTable("Vehicles");
+                });
+
+            modelBuilder.Entity("Vegas.Models.VehicleFeature", b =>
+                {
+                    b.Property<int>("VehicleId");
+
+                    b.Property<int>("FeatureId");
+
+                    b.HasKey("VehicleId", "FeatureId");
+
+                    b.HasIndex("FeatureId");
+
+                    b.ToTable("VehicleFeature");
+                });
+
             modelBuilder.Entity("Vegas.Models.Model", b =>
                 {
                     b.HasOne("Vegas.Models.Make", "Make")
                         .WithMany("Models")
                         .HasForeignKey("MakeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Vegas.Models.Vehicle", b =>
+                {
+                    b.HasOne("Vegas.Models.Make", "Make")
+                        .WithMany()
+                        .HasForeignKey("MakeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Vegas.Models.Model", "Model")
+                        .WithMany()
+                        .HasForeignKey("ModelId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Vegas.Models.VehicleFeature", b =>
+                {
+                    b.HasOne("Vegas.Models.Feature", "Feature")
+                        .WithMany("VehicleFeatures")
+                        .HasForeignKey("FeatureId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Vegas.Models.Vehicle", "Vehicle")
+                        .WithMany("VehicleFeatures")
+                        .HasForeignKey("VehicleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
