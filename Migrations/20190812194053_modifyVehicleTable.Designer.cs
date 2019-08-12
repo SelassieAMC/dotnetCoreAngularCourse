@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vegas.Persistence;
 
 namespace Vegas.Migrations
 {
     [DbContext(typeof(VegaDbContext))]
-    partial class VegaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190812194053_modifyVehicleTable")]
+    partial class modifyVehicleTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,9 +91,13 @@ namespace Vegas.Migrations
 
                     b.Property<DateTime>("LastUpdate");
 
+                    b.Property<int>("MakeId");
+
                     b.Property<int>("ModelId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MakeId");
 
                     b.HasIndex("ModelId");
 
@@ -121,6 +127,11 @@ namespace Vegas.Migrations
 
             modelBuilder.Entity("Vegas.Models.Vehicle", b =>
                 {
+                    b.HasOne("Vegas.Models.Make", "Make")
+                        .WithMany()
+                        .HasForeignKey("MakeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Vegas.Models.Model", "Model")
                         .WithMany()
                         .HasForeignKey("ModelId")

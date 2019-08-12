@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -13,8 +14,6 @@ namespace Vegas.Models
             this.VehicleFeatures = new Collection<VehicleFeature>();
         }
         public int Id { get; set; }
-        public Make Make { get; set; }
-        public int MakeId { get; set; }
         [Required]
         public Model Model { get; set; }
         public int ModelId { get; set; }
@@ -28,5 +27,6 @@ namespace Vegas.Models
         [MaxLength(255)]
         public string ContactEmail { get; set; }
         public ICollection<VehicleFeature> VehicleFeatures { get; set; }
+        public DateTime LastUpdate { get; set; }
     }
 }

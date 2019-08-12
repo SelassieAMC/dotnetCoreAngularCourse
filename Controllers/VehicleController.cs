@@ -9,6 +9,7 @@ using Vegas.Persistence;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
+using System;
 
 namespace Vegas.Controllers
 {
@@ -35,14 +36,18 @@ namespace Vegas.Controllers
         }
         
         [HttpPost("addVehicle")]
-        public async Task<ActionResult> addVehicleAsync([FromBody] VehicleResource vehicleBody){
+        public async Task<IActionResult> addVehicleAsync([FromBody] VehicleResource vehicleBody){
            try
            {
-                Vehicle newVehicle = mapper.Map<VehicleResource,Vehicle>(vehicleBody);
-                var data =  context.Vehicles.AddAsync(newVehicle);
+                if(!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var newVehicle = mapper.Map<VehicleResource,Vehicle>(vehicleBody);
+                var data =  context.Vehicles.Add(newVehicle);
                 //await context.SaveChangesAsync();
-                int result = await context.SaveChangesAsync();
-                return Ok(result);
+                await context.SaveChangesAsync();
+                var returnVehicle = mapper.Map<Vehicle, VehicleResource>(newVehicle);
+                return Ok(returnVehicle);
            }
            catch (System.Exception ex)
            {
@@ -50,21 +55,18 @@ namespace Vegas.Controllers
            }
         }
 
-        [HttpPost("updateVehicle")]
-        public async Task<ActionResult> updateVehicleAsync([FromBody] VehicleResource vehicleBody){
+        [HttpPost("updateVehicle/{id}")]
+        public async Task<IActionResult> updateVehicleAsync(int id, [FromBody] VehicleResource vehicleBody){
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
             try
             {
-                Vehicle uptVehicle = await context.Vehicles.AsNoTracking().Include(x=>x.VehicleFeatures).Where(x=>x.Id == vehicleBody.Id).FirstOrDefaultAsync();
-                uptVehicle = mapper.Map<VehicleResource,Vehicle>(vehicleBody);
-                uptVehicle.VehicleFeatures = new Collection<VehicleFeature>(); 
-                foreach(var featureId in vehicleBody.VehicleFeatures){
-                    VehicleFeature vf = new VehicleFeature();
-                    vf.FeatureId = featureId.FeatureId;
-                    vf.VehicleId = uptVehicle.Id;
-                    uptVehicle.VehicleFeatures.Add(vf);
-                }
-                context.Vehicles.Update(uptVehicle);
-                int result = await context.SaveChangesAsync();
+                //var uptVehicle = await context.Vehicles.AsNoTracking().Include(x=>x.VehicleFeatures).Where(x=>x.Id == id).FirstOrDefaultAsync();
+                var vehicleObj = await context.Vehicles.Include(x=>x.VehicleFeatures).FirstOrDefaultAsync(y=>y.Id.Equals(id));
+                mapper.Map<VehicleResource,Vehicle>(vehicleBody,vehicleObj);
+                vehicleObj.LastUpdate = DateTime.Now;
+                await context.SaveChangesAsync();
+                var result = mapper.Map<Vehicle,VehicleResource>(vehicleObj);
                 return Ok(result);
             }
             catch (System.Exception ex)
