@@ -5,20 +5,19 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Vegas.Controllers.Resources
 {
-    public class VehicleResource
+    public class SaveVehicleResource
     {
-        public VehicleResource() 
+        public SaveVehicleResource()
         {
-            this.Features = new Collection<KeyValuePairResource>();
+            Features = new Collection<int>();
         }
         public int Id { get; set; }
         [Required]
-        public KeyValuePairResource Model { get; set; }
-        public KeyValuePairResource Make { get; set; }
+        public int ModelId { get; set; }
         public bool IsRegistered { get; set; }
         [Required]
-        public ContactResource Contact  { get; set; }
-        public ICollection<KeyValuePairResource> Features { get; set; }
+        public ContactResource Contact { get; set; }
+        public ICollection<int> Features { get; set; }
         public DateTime LastUpdate { get; set; }
     }
 }

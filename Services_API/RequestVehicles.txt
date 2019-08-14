@@ -1,19 +1,37 @@
-POST https://localhost:5001/api/vehicle/updateVehicle/20 HTTP/1.1
+POST https://localhost:5001/api/vehicle/updateVehicle/33 HTTP/1.1
 content-type: application/json
 
 {
-    "ModelId":"2",
-    "IsRegistered":"false",
+    "ModelId":"1",
+    "IsRegistered":"true",
     "Contact":{
-        "Name":"nueve-diez",
-        "Phone":"0000000",
-        "Email":"aaaa@outlook.com"
+        "Name":"3333",
+        "Phone":"22222",
+        "Email":"111111"
     },
-    "Features":[2],
+    "Features":[2]
 }
 
 ###
-GET https://localhost:5001/api/vehicle/deleteVehicle/10 HTTP/1.1
+POST https://localhost:5001/api/vehicle/addVehicle HTTP/1.1
+content-type: application/json
+
+{
+    "ModelId":"3",
+    "IsRegistered":"true",
+    "Contact":{
+        "Name":"aaaaa",
+        "Phone":"aaaaaa",
+        "Email":"aaaaaaaa"
+    },
+    "Features":[2,3,1]
+}
+
+###
+GET https://localhost:5001/api/vehicle/deleteVehicle/20 HTTP/1.1
 
 ###
 GET https://localhost:5001/api/vehicle/getVehicles HTTP/1.1
+
+###
+GET https://localhost:5001/api/vehicle/getVehicle/22 HTTP/1.1
