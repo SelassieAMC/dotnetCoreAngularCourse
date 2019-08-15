@@ -1,4 +1,4 @@
-namespace Vegas.Models
+namespace Vegas.Core.Models
 {
     public class VehicleFeature
     {

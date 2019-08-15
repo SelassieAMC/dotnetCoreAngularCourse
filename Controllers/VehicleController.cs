@@ -2,79 +2,83 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Vegas.Controllers.Resources;
-using Vegas.Models;
-using Vegas.Persistence;
+using Vegas.Core.Models;
 using System;
+using Vegas.Core;
 
 namespace Vegas.Controllers
 {
     [Route("/api/[controller]/")]
     public class VehicleController : Controller
     {
-        private readonly VegaDbContext context;
-        private readonly VehicleRepository repoVehicle;
         private readonly IMapper mapper;
-        public VehicleController(VegaDbContext context, IMapper mapper)
+        private readonly IVehicleRepository repository;
+        private readonly IUnitOfWork unitOfWork;
+        public VehicleController(IMapper mapper, IVehicleRepository repository, IUnitOfWork unitOfWork)
         {
+            this.unitOfWork = unitOfWork;
+            this.repository = repository;
             this.mapper = mapper;
-            this.context = context;
-            this.repoVehicle = new VehicleRepository(context);
         }
         [HttpGet("getMakes")]
-        public async Task<IEnumerable<MakeResource>> GetMakes(){
-            var makes = await context.Makes.Include(m=>m.Models).ToListAsync();
-            return mapper.Map<List<Make>,List<MakeResource>>(makes);
+        public async Task<IEnumerable<MakeResource>> GetMakes()
+        {
+            var makes = await repository.GetMakesAsync();
+            return mapper.Map<IEnumerable<Make>, IEnumerable<MakeResource>>(makes);
         }
-        
+
         [HttpGet("getFeatures")]
-        public async Task<IEnumerable<KeyValuePairResource>> getFeaturesAsync(){
-            var features = await context.Features.ToListAsync();
-            return mapper.Map<IEnumerable<Feature>,IEnumerable<KeyValuePairResource>>(features);
+        public async Task<IEnumerable<KeyValuePairResource>> getFeaturesAsync()
+        {
+            var features = await repository.GetFeaturesAsync();
+            return mapper.Map<IEnumerable<Feature>, IEnumerable<KeyValuePairResource>>(features);
         }
-        
+
         [HttpPost("addVehicle")]
-        public async Task<IActionResult> addVehicleAsync([FromBody] SaveVehicleResource vehicleBody){
-           try
-           {
-                if(!ModelState.IsValid)
+        public async Task<IActionResult> addVehicleAsync([FromBody] SaveVehicleResource vehicleBody)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                var newVehicle = mapper.Map<SaveVehicleResource,Vehicle>(vehicleBody);
-                var data =  context.Vehicles.Add(newVehicle);
-                await context.SaveChangesAsync();
+                var newVehicle = mapper.Map<SaveVehicleResource, Vehicle>(vehicleBody);
+                newVehicle.LastUpdate = DateTime.Now;
+                repository.Add(newVehicle);
+                await unitOfWork.CompleteAsync();
 
-                newVehicle = await repoVehicle.GetVehicleAsync(newVehicle.Id);
+                newVehicle = await repository.GetVehicleAsync(newVehicle.Id);
 
                 var returnVehicle = mapper.Map<Vehicle, VehicleResource>(newVehicle);
                 return Ok(returnVehicle);
-           }
-           catch (System.Exception ex)
-           {
-               return BadRequest(ex.Message);
-           }
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("updateVehicle/{id}")]
-        public async Task<IActionResult> updateVehicleAsync(int id, [FromBody] SaveVehicleResource vehicleBody){
-            if(!ModelState.IsValid)
+        public async Task<IActionResult> updateVehicleAsync(int id, [FromBody] SaveVehicleResource vehicleBody)
+        {
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             try
             {
-                var vehicleObj = await repoVehicle.GetVehicleAsync(id);
+                var vehicleObj = await repository.GetVehicleAsync(id);
 
-                if(vehicleObj == null)
+                if (vehicleObj == null)
                     return NotFound();
 
-                mapper.Map<SaveVehicleResource,Vehicle>(vehicleBody,vehicleObj);
+                mapper.Map<SaveVehicleResource, Vehicle>(vehicleBody, vehicleObj);
                 vehicleObj.LastUpdate = DateTime.Now;
 
                 //context.Update(vehicleObj);
-                await context.SaveChangesAsync();
-                vehicleObj = await repoVehicle.GetVehicleAsync(vehicleObj.Id);
+                await unitOfWork.CompleteAsync();
+                vehicleObj = await repository.GetVehicleAsync(vehicleObj.Id);
 
-                var result = mapper.Map<Vehicle,VehicleResource>(vehicleObj);
+                var result = mapper.Map<Vehicle, VehicleResource>(vehicleObj);
                 return Ok(result);
             }
             catch (System.Exception ex)
@@ -84,31 +88,18 @@ namespace Vegas.Controllers
         }
 
         [HttpGet("deleteVehicle/{id}")]
-        public async Task<IActionResult> deleteVehicleAsync(int id){
+        public async Task<IActionResult> deleteVehicleAsync(int id)
+        {
             try
             {
-                var vehicle = await context.Vehicles.Include(x=>x.VehicleFeatures).FirstOrDefaultAsync(x=>x.Id.Equals(id));//.Where(x=>x.Id.Equals(id)).FirstOrDefaultAsync();
-                if(vehicle == null){
+                var vehicle = await repository.GetVehicleAsync(id,includeRelatedObjects: false);
+                if (vehicle == null)
+                {
                     return NotFound();
                 }
-                context.Vehicles.Remove(vehicle);
-                var result = context.SaveChangesAsync();
-                return Ok(result.Result);
-            }
-            catch (System.Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("getVehicles")]
-        public async Task<ActionResult> getVehiclesAsync(){
-            var vehiclesResponse = new List<SaveVehicleResource>();
-            try
-            {
-                var vehicles = await context.Vehicles.Include(x=>x.VehicleFeatures).ToListAsync();
-                vehiclesResponse = mapper.Map<List<Vehicle>,List<SaveVehicleResource>>(vehicles);
-                return Json(vehiclesResponse);
+                repository.Remove(vehicle);
+                var result = unitOfWork.CompleteAsync();
+                return Ok(result.Status);
             }
             catch (System.Exception ex)
             {
@@ -117,14 +108,15 @@ namespace Vegas.Controllers
         }
 
         [HttpGet("getVehicle/{id}")]
-        public async Task<ActionResult> getVehicleAsync(int id){
+        public async Task<ActionResult> getVehicleAsync(int id)
+        {
             try
             {
-                var vehicle = await repoVehicle.GetVehicleAsync(id);
-                if(vehicle == null)
+                var vehicle = await repository.GetVehicleAsync(id);
+                if (vehicle == null)
                     return NotFound();
 
-                var response = mapper.Map<Vehicle,VehicleResource>(vehicle);
+                var response = mapper.Map<Vehicle, VehicleResource>(vehicle);
                 return Ok(response);
             }
             catch (System.Exception ex)
@@ -133,4 +125,4 @@ namespace Vegas.Controllers
             }
         }
     }
-}
+}   

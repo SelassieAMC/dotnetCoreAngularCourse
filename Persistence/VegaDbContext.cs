@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Vegas.Models;
+using Vegas.Core.Models;
 
 namespace Vegas.Persistence
 {
