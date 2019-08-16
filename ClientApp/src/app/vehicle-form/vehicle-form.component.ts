@@ -9,7 +9,10 @@ import { NgForm } from '@angular/forms';
 })
 export class VehicleFormComponent implements OnInit {
   makes: any[];
-  vehicle: any= {};
+  vehicle: any= {
+    features : [],
+    Contact : {}
+  };
   features = [];
   models: any[];
 
@@ -28,19 +31,29 @@ export class VehicleFormComponent implements OnInit {
 
   onMakeChange(){
     //console.log("VEHICLE", this.vehicle)
-    var selectedMake = this.makes.find(item=>item.id == this.vehicle.make);
+    var selectedMake = this.makes.find(item=>item.id == this.vehicle.MakeId);
     this.models = selectedMake ? selectedMake.models: [];
+    delete this.vehicle.ModelId;
+  }
+  //My ontoggle features solution
+  // addFeature(){
+  //   const checkedOptions = this.features.filter(item => item.checked);
+  //   //console.log(checkedOptions);
+  //   //this.vehicle.features.push(checkedOptions.map(item => item.id));
+  //   this.vehicle.features = checkedOptions.map(item => item.id);
+  // }
+  onFeatureToggle(featureId, $event){
+    if($event.target.checked){
+      this.vehicle.features.push(featureId);
+    }else{
+      var index = this.vehicle.features.indexOf(featureId);
+      this.vehicle.features.splice(index, 1);
+    }
   }
 
-  addFeature(){
-    this.vehicle.features = [];
-    const checkedOptions = this.features.filter(item => item.checked);
-    //console.log(checkedOptions);
-    this.vehicle.features.push(checkedOptions.map(item => item.id));
-  }
-
-  saveVehicleData(){
-    console.log(this.vehicle);
+  submit(){
+    this.vehicleService.createVehicle(this.vehicle)
+    .subscribe(x => console.log(x));
   }
 
 }
