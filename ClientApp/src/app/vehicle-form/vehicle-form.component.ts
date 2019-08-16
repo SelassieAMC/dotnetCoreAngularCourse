@@ -1,6 +1,6 @@
 import { VehicleService } from '../services/vehicle.service';
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { ToastrManager  } from 'ng6-toastr-notifications';
 
 @Component({
   selector: 'app-vehicle-form',
@@ -16,7 +16,7 @@ export class VehicleFormComponent implements OnInit {
   features = [];
   models: any[];
 
-  constructor(private vehicleService: VehicleService) { }
+  constructor(private vehicleService: VehicleService, public toasterService : ToastrManager) { }
 
   ngOnInit() {
     this.vehicleService.getMakes()
@@ -53,7 +53,9 @@ export class VehicleFormComponent implements OnInit {
 
   submit(){
     this.vehicleService.createVehicle(this.vehicle)
-    .subscribe(x => console.log(x));
+    .subscribe(
+      x => console.log(x)
+    );
   }
 
 }

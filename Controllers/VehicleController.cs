@@ -38,6 +38,7 @@ namespace Vegas.Controllers
         [HttpPost("addVehicle")]
         public async Task<IActionResult> addVehicleAsync([FromBody] SaveVehicleResource vehicleBody)
         {
+            throw new Exception();
             try
             {
                 if (!ModelState.IsValid)
