@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/browser';
-import { ErrorHandler, Inject, Injectable, Injector } from '@angular/core';
+import { ErrorHandler, Injectable, Injector, isDevMode } from '@angular/core';
 import { ToastrManager } from 'ng6-toastr-notifications';
 @Injectable()
 export class AppErrorHandler implements ErrorHandler{
@@ -10,11 +10,14 @@ export class AppErrorHandler implements ErrorHandler{
     constructor(private _injector:Injector) {        
     }
     handleError(error: any): void {
-        Sentry.captureException(error.originalError || error);
         //solving cyclic dependency
         if (!this._toastService) {
             this._toastService=this._injector.get(ToastrManager);
         }
+        if(!isDevMode()){
+            Sentry.captureException(error.originalError || error);
+        }
+        //throw error;
         //console.log("Method not implemented.");
         this._toastService.errorToastr(
             'An expected error hapenned',
