@@ -1,7 +1,10 @@
+import * as _ from 'underscore';
+import { Vehicle, SaveVehicle } from './../models/Vehicle';
 import { VehicleService } from '../services/vehicle.service';
 import { Component, OnInit } from '@angular/core';
 import { ToastrManager  } from 'ng6-toastr-notifications';
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin  } from 'rxjs';
 @Component({
   selector: 'app-vehicle-form',
   templateUrl: './vehicle-form.component.html',
@@ -9,39 +12,65 @@ import { ToastrManager  } from 'ng6-toastr-notifications';
 })
 export class VehicleFormComponent implements OnInit {
   makes: any[];
-  vehicle: any= {
+  vehicle: SaveVehicle = {
+    id:0,
+    modelId:0,
+    makeId:0,
+    isRegistered:false,
     features : [],
-    Contact : {}
+    contact : {
+      name:'',
+      phone:'',
+      email:''
+    }
   };
   features = [];
   models: any[];
 
-  constructor(private vehicleService: VehicleService, public toasterService : ToastrManager) { }
-
-  ngOnInit() {
-    this.vehicleService.getMakes()
-    .subscribe(
-      makes => {
-        this.makes = makes;
-        //console.log("MAKES", this.makes);
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private vehicleService: VehicleService, 
+    public toasterService : ToastrManager) {
+      route.params.subscribe(r => {
+        this.vehicle.id = +r['id'];
       });
-    this.vehicleService.getFeatures()
-      .subscribe(features => this.features = features);
+    }
+
+  ngOnInit() {   
+    var sources = [
+      this.vehicleService.getMakes(),
+      this.vehicleService.getFeatures()];
+
+    if(this.vehicle.id){
+      sources.push(this.vehicleService.getVehicle(this.vehicle.id));
+    }
+    forkJoin(sources).subscribe(data => {
+      this.makes = data[0];
+      this.features = data[1];
+      if(this.vehicle.id)
+        this.setVehicle(data[2]);
+    }, err => {
+      if(err.status == 404)
+        this.router.navigate(['']);
+    });
+  }
+
+  private setVehicle(v : Vehicle){
+    this.vehicle.id = v.id;
+    this.vehicle.modelId = v.model.id;
+    this.vehicle.makeId = v.make.id;
+    this.vehicle.isRegistered = v.isRegistered;   
+    this.vehicle.contact = v.contact;
+    this.vehicle.features = _.pluck(v.features,'id');
   }
 
   onMakeChange(){
     //console.log("VEHICLE", this.vehicle)
-    var selectedMake = this.makes.find(item=>item.id == this.vehicle.MakeId);
+    var selectedMake = this.makes.find(item=>item.id == this.vehicle.makeId);
     this.models = selectedMake ? selectedMake.models: [];
-    delete this.vehicle.ModelId;
+    delete this.vehicle.modelId;
   }
-  //My ontoggle features solution
-  // addFeature(){
-  //   const checkedOptions = this.features.filter(item => item.checked);
-  //   //console.log(checkedOptions);
-  //   //this.vehicle.features.push(checkedOptions.map(item => item.id));
-  //   this.vehicle.features = checkedOptions.map(item => item.id);
-  // }
   onFeatureToggle(featureId, $event){
     if($event.target.checked){
       this.vehicle.features.push(featureId);
@@ -50,7 +79,6 @@ export class VehicleFormComponent implements OnInit {
       this.vehicle.features.splice(index, 1);
     }
   }
-
   submit(){
     this.vehicleService.createVehicle(this.vehicle)
     .subscribe(

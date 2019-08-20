@@ -1,11 +1,11 @@
 <h1>New Vehicle</h1>
-<!-- <p>
+<p>
   {{vehicle | json}}
-</p> -->
+</p>
 <form #f="ngForm" (ngSubmit)="submit()">
   <div class="form-group">
     <label for="make">Make</label>
-    <select class="form-control" id="make" (change)="onMakeChange()" [(ngModel)]="vehicle.MakeId" name="MakeId" required #make="ngModel">
+    <select class="form-control" id="make" (change)="onMakeChange()" [(ngModel)]="vehicle.makeId" name="makeId" required #make="ngModel">
       <option value=""></option>
       <option *ngFor="let item of makes" value="{{item.id}}">{{item.name}}</option>
     </select>
@@ -13,7 +13,7 @@
   </div>
   <div class="form-group">
     <label for="model">Model</label>
-    <select id="model" name="ModelId" class="form-control" [(ngModel)]="vehicle.ModelId" required #model="ngModel">
+    <select id="model" name="modelId" class="form-control" [(ngModel)]="vehicle.modelId" required #model="ngModel">
       <option value=""></option>
       <option *ngFor="let item of models" value="{{item.id}}">{{item.name}}</option>
     </select>
@@ -36,17 +36,17 @@
   <h2>Contact</h2>
   <div class="form-group">
     <label for="contactName">Name</label>
-    <input type="text" name="Name" id="contactName" class="form-control" [(ngModel)]="vehicle.Contact.Name" required #contactName="ngModel">
+    <input type="text" name="name" id="contactName" class="form-control" [(ngModel)]="vehicle.contact.name" required #contactName="ngModel">
   </div>
   <div class="alert alert-danger" *ngIf="!contactName.valid && contactName.touched">Please specify the contact name.</div>
   <div class="form-group">
     <label for="contactPhone">Phone</label>
-    <input type="text" name="Phone" id="contactPhone" class="form-control" [(ngModel)]="vehicle.Contact.Phone" required #contactPhone="ngModel">
+    <input type="text" name="phone" id="contactPhone" class="form-control" [(ngModel)]="vehicle.contact.phone" required #contactPhone="ngModel">
   </div>
   <div class="alert alert-danger" *ngIf="!contactPhone.valid && contactPhone.touched">Please specify the contact phone.</div>
   <div class="form-group">
     <label for="contactEmail">Email</label>
-    <input type="text" name="Email" id="contactEmail" class="form-control" [(ngModel)]="vehicle.Contact.Email" >
+    <input type="text" name="email" id="contactEmail" class="form-control" [(ngModel)]="vehicle.contact.email" >
   </div>
-  <button class="btn btn-primary" type="submit">Save</button>
+  <button class="btn btn-primary" [disabled]="!f.valid" type="submit">Save</button>
 </form>

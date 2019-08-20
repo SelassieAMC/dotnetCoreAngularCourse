@@ -11,15 +11,20 @@ export class VehicleService {
 
   getMakes(){
     return this.http.get('/api/vehicle/getMakes')
-      .pipe(map((res => res.json())));
+      .pipe(map(res => res.json()));
   }
   getFeatures(){
     return this.http.get('/api/vehicle/getFeatures')
-      .pipe(map((res => res.json())));
+      .pipe(map(res => res.json()));
   }
   createVehicle(vehicle){
     return this.http.post('/api/vehicle/addVehicle',vehicle)
-      .pipe(map((res=> res.json())));
+      .pipe(map(res=> res.json()));
+  }
+
+  getVehicle(id){
+    return this.http.get('/api/vehicle/getVehicle/'+id)
+    .pipe(map(res=>res.json()));
   }
 
 }

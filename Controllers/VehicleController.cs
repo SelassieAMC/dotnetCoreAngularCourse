@@ -38,7 +38,7 @@ namespace Vegas.Controllers
         [HttpPost("addVehicle")]
         public async Task<IActionResult> addVehicleAsync([FromBody] SaveVehicleResource vehicleBody)
         {
-            throw new Exception();
+            //throw new Exception();
             try
             {
                 if (!ModelState.IsValid)
@@ -109,7 +109,7 @@ namespace Vegas.Controllers
         }
 
         [HttpGet("getVehicle/{id}")]
-        public async Task<ActionResult> getVehicleAsync(int id)
+        public async Task<IActionResult> getVehicleAsync(int id)
         {
             try
             {
