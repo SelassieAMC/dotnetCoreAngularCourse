@@ -1,15 +1,15 @@
-export class KeyValuePair{
+export interface KeyValuePair{
     id: number;
     name: string;
 }
 
-export class Contact{
+export interface Contact{
     name: string;
     phone: string;
     email: string;
 }
 
-export class Vehicle {
+export interface Vehicle {
     id: number;
     model: KeyValuePair;
     make: KeyValuePair;
@@ -19,7 +19,7 @@ export class Vehicle {
     lastUpdate: string;
 }
 
-export class SaveVehicle{
+export interface SaveVehicle{
     id: number;
     modelId: number;
     makeId: number;
