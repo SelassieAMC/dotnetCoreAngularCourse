@@ -15,6 +15,7 @@ import { HomeComponent } from './home/home.component';
 import { CounterComponent } from './counter/counter.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
+import { VehiclesComponent } from './vehicles/vehicles.component';
 import { VehicleService } from './services/vehicle.service';
 
 Sentry.init({
@@ -28,6 +29,7 @@ Sentry.init({
     CounterComponent,
     FetchDataComponent,
     VehicleFormComponent,
+    VehiclesComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -37,9 +39,11 @@ Sentry.init({
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: '', redirectTo: 'vehicles', pathMatch: 'full' },
+      { path: 'home', component: HomeComponent, pathMatch: 'full' },
       { path: 'vehicle/new', component: VehicleFormComponent},
       { path: 'vehicle/:id', component: VehicleFormComponent},
+      { path: 'vehicles', component: VehiclesComponent},
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
     ])

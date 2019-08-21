@@ -11,5 +11,6 @@ namespace Vegas.Core
         Task<Vehicle> GetVehicleAsync(int id, bool includeRelatedObjects = true);
         void Add(Vehicle vehicle);
         void Remove(Vehicle vehicle);
+        Task<IEnumerable<Vehicle>> GetVehiclesAsync(int pagination, int quantity);
     }
 }

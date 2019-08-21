@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Vegas.Core;
@@ -40,6 +41,15 @@ namespace Vegas.Persistence
             .Include(vr => vr.Model)
                 .ThenInclude(vr => vr.Make)
             .FirstOrDefaultAsync(x=>x.Id.Equals(id));
+        }
+
+        public async Task<IEnumerable<Vehicle>> GetVehiclesAsync(int pagination, int quantity)
+        {
+            return await context.Vehicles
+                .Include(m=>m.Model)
+                 .ThenInclude(vr => vr.Make)
+                .Skip(pagination*quantity)
+                .Take(quantity).ToListAsync();
         }
 
         public void Remove(Vehicle vehicle)

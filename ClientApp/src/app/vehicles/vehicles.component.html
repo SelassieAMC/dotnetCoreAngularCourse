@@ -1,0 +1,25 @@
+<h2>Vehicles</h2>
+<select name="filter" id="filterId">
+  <option *ngFor="let item of vehicles.makes" value=""></option>
+</select>
+
+<table class="table table-bordered">
+  <tbody>
+    <tr>
+      <td>ID</td>
+      <td>Make</td>
+      <td>Model</td>
+      <td>Contact Name</td>
+      <td>View</td>
+    </tr>
+    <tr *ngFor="let item of vehicles">
+        <td>{{item.id}}</td>
+        <td>{{item.make.name}}</td>
+        <td>{{item.model.name}}</td>
+        <td>{{item.contact.name}}</td>
+        <td><button class="btn btn-primary" (click)="viewVehicle(item.id)">Details</button></td>
+    </tr>
+  </tbody>
+</table>
+<button class="btn" *ngIf="pagination>1" (click)="BackPage()">Back</button>
+<button class="btn" *ngIf="!noNext" (click)="NextPage()">Next</button>
