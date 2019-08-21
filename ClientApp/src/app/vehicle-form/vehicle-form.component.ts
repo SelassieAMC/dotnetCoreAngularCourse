@@ -48,8 +48,10 @@ export class VehicleFormComponent implements OnInit {
     forkJoin(sources).subscribe(data => {
       this.makes = data[0];
       this.features = data[1];
-      if(this.vehicle.id)
+      if(this.vehicle.id){
         this.setVehicle(data[2]);
+        this.populateModels();
+      }
     }, err => {
       if(err.status == 404)
         this.router.navigate(['']);
@@ -66,10 +68,13 @@ export class VehicleFormComponent implements OnInit {
   }
 
   onMakeChange(){
-    //console.log("VEHICLE", this.vehicle)
+    this.populateModels();
+    delete this.vehicle.modelId;
+  }
+
+  private populateModels(){
     var selectedMake = this.makes.find(item=>item.id == this.vehicle.makeId);
     this.models = selectedMake ? selectedMake.models: [];
-    delete this.vehicle.modelId;
   }
   onFeatureToggle(featureId, $event){
     if($event.target.checked){
@@ -80,10 +85,42 @@ export class VehicleFormComponent implements OnInit {
     }
   }
   submit(){
-    this.vehicleService.createVehicle(this.vehicle)
-    .subscribe(
-      x => console.log(x)
-    );
+    if(this.vehicle.id){
+      this.vehicleService.updateVehicle(this.vehicle)
+      .subscribe(res=>{
+        this.toasterService.successToastr(
+          'Vehicle updated succesfully',
+            'Success',
+            {
+              toastTimeout:5000,
+              animate: 'slideFromTop',
+              showCloseButton: false
+            });
+      });
+    }else{
+      this.vehicle.id = 0;
+      this.vehicleService.createVehicle(this.vehicle)
+      .subscribe(
+        x => {
+          this.toasterService.successToastr(
+            'Vehicle created succesfully',
+            'Success',
+            {
+              toastTimeout:5000,
+              animate: 'slideFromTop',
+              showCloseButton: false
+            });
+            this.setVehicle(x); 
+        }
+      );
+    }
+  }
+
+  delete(){
+    this.vehicleService.deleteVehicle(this.vehicle.id)
+    .subscribe(res => {
+      this.router.navigate(['']);
+    });
   }
 
 }
