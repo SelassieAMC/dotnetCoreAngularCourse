@@ -52,6 +52,21 @@ namespace Vegas.Persistence
                 .Take(quantity).ToListAsync();
         }
 
+        public async Task<IEnumerable<Vehicle>> GetVehiclesAsync(Filter filter)
+        {
+            var query = context.Vehicles
+                .Include(m=>m.Model)
+                 .ThenInclude(vr => vr.Make)
+                .Include(f=>f.VehicleFeatures)
+                    .ThenInclude(vf =>vf.Feature)
+                .AsQueryable();
+            
+            if(filter.MakeId.HasValue){
+                query = query.Where(x=>x.Model.MakeId == filter.MakeId);
+            }
+            return await query.ToListAsync();
+        }
+
         public void Remove(Vehicle vehicle)
         {
             context.Vehicles.Remove(vehicle);

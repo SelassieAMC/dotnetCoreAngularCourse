@@ -12,5 +12,6 @@ namespace Vegas.Core
         void Add(Vehicle vehicle);
         void Remove(Vehicle vehicle);
         Task<IEnumerable<Vehicle>> GetVehiclesAsync(int pagination, int quantity);
+        Task<IEnumerable<Vehicle>> GetVehiclesAsync(Filter filter);
     }
 }

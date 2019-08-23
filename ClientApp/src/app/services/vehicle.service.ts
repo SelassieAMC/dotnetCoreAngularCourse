@@ -42,4 +42,9 @@ export class VehicleService {
     return this.http.get('/api/vehicle/getVehicles/'+pagination+'/'+quantity)
     .pipe(map(res=>res.json()));
   }
+
+  getAllVehicles(){
+    return this.http.get('/api/vehicle/getVehicles')
+    .pipe(map(res=>res.json()));
+  }
 }

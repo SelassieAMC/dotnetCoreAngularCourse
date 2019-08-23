@@ -138,5 +138,20 @@ namespace Vegas.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("getVehicles/")]
+        public async  Task<IActionResult> getVehicles(FilterResource filter){
+            try
+            {
+                var filterObj = mapper.Map<FilterResource,Filter>(filter);
+                var vehsObj = await repository.GetVehiclesAsync(filterObj);
+                var vehicles = mapper.Map<IEnumerable<Vehicle>,IEnumerable<VehicleResource>>(vehsObj);
+                return Ok(vehicles);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }   

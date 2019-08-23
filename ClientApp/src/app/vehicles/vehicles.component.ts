@@ -18,15 +18,23 @@ export class VehiclesComponent implements OnInit {
   ) { }
 
   vehicles : Vehicle[] = [];
+  allVehicles : Vehicle[];
+  makes : any;
+  filter : any = {};
   pagination: number = 1;
   noNext: boolean = false;
   quantity: number = 6;
   ngOnInit() {
-    this.getVehicles(this.pagination,this.quantity);
+    //this.getVehicles(this.pagination,this.quantity);
+    this.getAllVehicles();
+    this.vehicleService.getMakes()
+    .subscribe(m => {
+      this.makes = m;
+    })
   }
   private getVehicles(pagination,quantity){
     this.vehicleService.getVehicles(pagination,quantity).subscribe(vs=> {
-      this.vehicles = vs;
+      this.vehicles = this.allVehicles = vs;
       if(this.vehicles.length < 6){
         this.noNext = true;
       }else{
@@ -34,6 +42,13 @@ export class VehiclesComponent implements OnInit {
       }
     });
   }
+
+  private getAllVehicles(){
+    this.vehicleService.getAllVehicles().subscribe(vs=> {
+      this.vehicles = this.allVehicles = vs;
+    });
+  }
+
   viewVehicle(id){
     this.router.navigate(['/vehicle/'+id]);
   }
@@ -44,5 +59,16 @@ export class VehiclesComponent implements OnInit {
   BackPage(){
     this.pagination--;
     this.getVehicles(this.pagination,this.quantity);
+  }
+  onFilterChange(){
+    var vehicles = this.allVehicles;
+    if(this.filter.makeId)
+      vehicles = vehicles.filter(x => x.make.id == this.filter.makeId);
+    
+    this.vehicles = vehicles;
+  }
+  resetFilter(){
+    this.filter = {};
+    this.onFilterChange();
   }
 }

@@ -1,8 +1,18 @@
 <h2>Vehicles</h2>
-<select name="filter" id="filterId">
-  <option *ngFor="let item of vehicles.makes" value=""></option>
-</select>
 
+<p>
+  <a routerLink="/vehicle/new" routerLinkActive="btn btn-primary" class="btn btn-primary">New Vehicle</a>
+</p>
+<div class="well">
+    <div class="form-group">
+        <label for="makesId">Make</label>
+        <select name="makes" id="makesId" class="form-control" [(ngModel)]="filter.makeId" (change)="onFilterChange()">
+          <option></option>
+          <option *ngFor="let m of makes" value="{{m.id}}">{{m.name}}</option>
+        </select>
+      </div>
+      <button class="btn btn-secondary" (click)="resetFilter()">Reset</button>
+</div>
 <table class="table table-bordered">
   <tbody>
     <tr>
@@ -10,14 +20,14 @@
       <td>Make</td>
       <td>Model</td>
       <td>Contact Name</td>
-      <td>View</td>
+      <td></td>
     </tr>
     <tr *ngFor="let item of vehicles">
         <td>{{item.id}}</td>
         <td>{{item.make.name}}</td>
         <td>{{item.model.name}}</td>
         <td>{{item.contact.name}}</td>
-        <td><button class="btn btn-primary" (click)="viewVehicle(item.id)">Details</button></td>
+        <td><a [routerLink]="['/vehicle/',item.id]" routerLinkActive="router-link-active">View</a> </td>
     </tr>
   </tbody>
 </table>
