@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Vegas.Core;
 using Vegas.Core.Models;
+using Vegas.Extensions;
 
 namespace Vegas.Persistence
 {
@@ -66,7 +67,7 @@ namespace Vegas.Persistence
             if(queryObj.MakeId.HasValue){
                 query = query.Where(x=>x.Model.MakeId == queryObj.MakeId);
             }
-            if(queryObj.MakeId.HasValue){
+            if(queryObj.ModelId.HasValue){
                 query = query.Where(x=>x.Model.Id == queryObj.ModelId);
             }
             var columnsMap = new Dictionary<string, Expression<Func<Vehicle,object>>>() {
@@ -75,16 +76,8 @@ namespace Vegas.Persistence
                 ["contactName"] = v => v.ContactName,
                 ["id"] = v => v.Id
             };
-            query = applyOrdering(query,columnsMap,queryObj);
+            query = query.ApplyOrdering(columnsMap,queryObj);
             return await query.ToListAsync();
-        }
-
-        private IQueryable<Vehicle> applyOrdering (IQueryable<Vehicle> query, Dictionary<string, Expression<Func<Vehicle,Object>>> columnsMap, VehicleQuery queryObj){
-            if(queryObj.IsSortAscending){
-                return query.OrderBy(columnsMap[queryObj.SortBy]);
-            }else{
-                return query.OrderByDescending(columnsMap[queryObj.SortBy]);
-            }
         }
 
         public void Remove(Vehicle vehicle)

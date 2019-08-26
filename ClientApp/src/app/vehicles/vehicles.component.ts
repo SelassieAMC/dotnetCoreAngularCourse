@@ -19,7 +19,7 @@ export class VehiclesComponent implements OnInit {
 
   vehicles : Vehicle[] = [];
   makes : any;
-  filter : any = {};
+  query : any = {};
   pagination: number = 1;
   noNext: boolean = false;
   quantity: number = 6;
@@ -43,7 +43,7 @@ export class VehiclesComponent implements OnInit {
   }
 
   private getAllVehicles(){
-    this.vehicleService.getAllVehicles(this.filter).subscribe(vs=> {
+    this.vehicleService.getAllVehicles(this.query).subscribe(vs=> {
       this.vehicles = vs;
     });
   }
@@ -52,12 +52,22 @@ export class VehiclesComponent implements OnInit {
     this.getAllVehicles();
   }
   resetFilter(){
-    this.filter = {};
+    this.query = {};
     this.onFilterChange();
   }
   viewVehicle(id){
     this.router.navigate(['/vehicle/'+id]);
   }
+  orderBy(columnName){
+    if(this.query.SortBy === columnName){
+      this.query.IsSortAscending = false;
+    }else{
+      this.query.SortBy = columnName;
+      this.query.IsSortAscending = true;
+    }
+    this.getAllVehicles();
+  }
+
   NextPage(){
     this.pagination++;
     this.getVehicles(this.pagination,this.quantity);

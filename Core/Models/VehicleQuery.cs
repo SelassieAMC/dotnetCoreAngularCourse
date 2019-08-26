@@ -1,6 +1,8 @@
+using Vegas.Extensions;
+
 namespace Vegas.Core.Models
 {
-    public class VehicleQuery
+    public class VehicleQuery : IQueryObject
     {
         public int? MakeId { get; set; }
         public int? ModelId { get; set; }
