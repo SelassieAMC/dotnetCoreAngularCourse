@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Vegas.Core;
@@ -52,7 +54,7 @@ namespace Vegas.Persistence
                 .Take(quantity).ToListAsync();
         }
 
-        public async Task<IEnumerable<Vehicle>> GetVehiclesAsync(Filter filter)
+        public async Task<IEnumerable<Vehicle>> GetVehiclesAsync(VehicleQuery queryObj)
         {
             var query = context.Vehicles
                 .Include(m=>m.Model)
@@ -60,12 +62,23 @@ namespace Vegas.Persistence
                 .Include(f=>f.VehicleFeatures)
                     .ThenInclude(vf =>vf.Feature)
                 .AsQueryable();
-            
-            if(filter.MakeId.HasValue){
-                query = query.Where(x=>x.Model.MakeId == filter.MakeId);
+
+            if(queryObj.MakeId.HasValue){
+                query = query.Where(x=>x.Model.MakeId == queryObj.MakeId);
             }
-            if(filter.MakeId.HasValue){
-                query = query.Where(x=>x.Model.Id == filter.ModelId);
+            if(queryObj.MakeId.HasValue){
+                query = query.Where(x=>x.Model.Id == queryObj.ModelId);
+            }
+            var columnsMap = new Dictionary<string, Expression<Func<Vehicle,object>>>() {
+                ["make"] = v => v.Model.Make.Name,
+                ["model"] = v => v.Model.Name,
+                ["contactName"] = v => v.ContactName,
+                ["id"] = v => v.Id
+            };
+            if(queryObj.IsSortAscending){
+                query = query.OrderBy(columnsMap[queryObj.SortBy]);
+            }else{
+                query = query.OrderByDescending(columnsMap[queryObj.SortBy]);
             }
             return await query.ToListAsync();
         }

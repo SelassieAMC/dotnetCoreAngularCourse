@@ -140,10 +140,10 @@ namespace Vegas.Controllers
         }
 
         [HttpGet("getVehicles/")]
-        public async  Task<IActionResult> getVehicles(FilterResource filter){
+        public async  Task<IActionResult> getVehicles(VehicleQueryResource filter){
             try
             {
-                var filterObj = mapper.Map<FilterResource,Filter>(filter);
+                var filterObj = mapper.Map<VehicleQueryResource,VehicleQuery>(filter);
                 var vehsObj = await repository.GetVehiclesAsync(filterObj);
                 var vehicles = mapper.Map<IEnumerable<Vehicle>,IEnumerable<VehicleResource>>(vehsObj);
                 return Ok(vehicles);

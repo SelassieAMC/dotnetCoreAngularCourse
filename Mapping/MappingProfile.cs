@@ -10,7 +10,7 @@ namespace Vegas.Mapping
         public MappingProfile()
         {
             //Domain model to API Resource
-            CreateMap<Filter,FilterResource>();
+            CreateMap<VehicleQuery,VehicleQueryResource>();
             CreateMap<Make,MakeResource>();
             CreateMap<Model,KeyValuePairResource>();
             CreateMap<Feature, KeyValuePairResource>();
@@ -27,7 +27,7 @@ namespace Vegas.Mapping
                     opt.MapFrom(v => v.VehicleFeatures.Select( vr => new KeyValuePairResource{Id = vr.Feature.Id, Name = vr.Feature.Name})));
                   
             //API Resouce to Domain
-            CreateMap<FilterResource,Filter>();
+            CreateMap<VehicleQueryResource,VehicleQuery>();
             CreateMap<SaveVehicleResource,Vehicle>()
                 .ForMember(vr => vr.Id, opt => opt.Ignore())
                 .ForMember(v => v.ContactName,opt => opt.MapFrom(src => src.Contact.Name))
