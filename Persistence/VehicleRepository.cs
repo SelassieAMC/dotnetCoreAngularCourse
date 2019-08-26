@@ -62,7 +62,10 @@ namespace Vegas.Persistence
                 .AsQueryable();
             
             if(filter.MakeId.HasValue){
-                query = query.Where(x=>x.Model.Id == filter.ModelId).Where(x=>x.Model.MakeId == filter.MakeId);
+                query = query.Where(x=>x.Model.MakeId == filter.MakeId);
+            }
+            if(filter.MakeId.HasValue){
+                query = query.Where(x=>x.Model.Id == filter.ModelId);
             }
             return await query.ToListAsync();
         }
