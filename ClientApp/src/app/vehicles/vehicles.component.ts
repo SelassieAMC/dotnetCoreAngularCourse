@@ -18,7 +18,6 @@ export class VehiclesComponent implements OnInit {
   ) { }
 
   vehicles : Vehicle[] = [];
-  allVehicles : Vehicle[];
   makes : any;
   filter : any = {};
   pagination: number = 1;
@@ -34,7 +33,7 @@ export class VehiclesComponent implements OnInit {
   }
   private getVehicles(pagination,quantity){
     this.vehicleService.getVehicles(pagination,quantity).subscribe(vs=> {
-      this.vehicles = this.allVehicles = vs;
+      this.vehicles = vs;
       if(this.vehicles.length < 6){
         this.noNext = true;
       }else{
@@ -44,11 +43,18 @@ export class VehiclesComponent implements OnInit {
   }
 
   private getAllVehicles(){
-    this.vehicleService.getAllVehicles().subscribe(vs=> {
-      this.vehicles = this.allVehicles = vs;
+    this.vehicleService.getAllVehicles(this.filter).subscribe(vs=> {
+      this.vehicles = vs;
     });
   }
-
+  onFilterChange(){
+    //this.filter.modelId =2;
+    this.getAllVehicles();
+  }
+  resetFilter(){
+    this.filter = {};
+    this.onFilterChange();
+  }
   viewVehicle(id){
     this.router.navigate(['/vehicle/'+id]);
   }
@@ -59,16 +65,5 @@ export class VehiclesComponent implements OnInit {
   BackPage(){
     this.pagination--;
     this.getVehicles(this.pagination,this.quantity);
-  }
-  onFilterChange(){
-    var vehicles = this.allVehicles;
-    if(this.filter.makeId)
-      vehicles = vehicles.filter(x => x.make.id == this.filter.makeId);
-    
-    this.vehicles = vehicles;
-  }
-  resetFilter(){
-    this.filter = {};
-    this.onFilterChange();
   }
 }
