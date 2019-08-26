@@ -59,8 +59,9 @@ export class VehiclesComponent implements OnInit {
     this.router.navigate(['/vehicle/'+id]);
   }
   orderBy(columnName){
+    console.log(this.query.SortBy);
     if(this.query.SortBy === columnName){
-      this.query.IsSortAscending = false;
+      this.query.IsSortAscending = !this.query.IsSortAscending;
     }else{
       this.query.SortBy = columnName;
       this.query.IsSortAscending = true;

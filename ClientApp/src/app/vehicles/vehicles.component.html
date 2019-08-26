@@ -17,7 +17,11 @@
   <tbody>
     <tr>
       <td>ID</td>
-      <td (click)="orderBy('make')">Make</td>
+      <td (click)="orderBy('make')">
+        Make
+        <fa-icon *ngIf="query.SortBy === 'make' && query.IsSortAscending"  icon="sort-up"></fa-icon>
+        <fa-icon *ngIf="query.SortBy === 'make' && !query.IsSortAscending"  icon="sort-down"></fa-icon>
+      </td>
       <td (click)="orderBy('model')">Model</td>
       <td (click)="orderBy('contactName')">Contact Name</td>
       <td></td>
