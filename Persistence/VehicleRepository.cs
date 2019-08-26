@@ -75,12 +75,16 @@ namespace Vegas.Persistence
                 ["contactName"] = v => v.ContactName,
                 ["id"] = v => v.Id
             };
-            if(queryObj.IsSortAscending){
-                query = query.OrderBy(columnsMap[queryObj.SortBy]);
-            }else{
-                query = query.OrderByDescending(columnsMap[queryObj.SortBy]);
-            }
+            query = applyOrdering(query,columnsMap,queryObj);
             return await query.ToListAsync();
+        }
+
+        private IQueryable<Vehicle> applyOrdering (IQueryable<Vehicle> query, Dictionary<string, Expression<Func<Vehicle,Object>>> columnsMap, VehicleQuery queryObj){
+            if(queryObj.IsSortAscending){
+                return query.OrderBy(columnsMap[queryObj.SortBy]);
+            }else{
+                return query.OrderByDescending(columnsMap[queryObj.SortBy]);
+            }
         }
 
         public void Remove(Vehicle vehicle)
