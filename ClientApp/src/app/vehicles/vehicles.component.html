@@ -16,15 +16,14 @@
 <table class="table table-bordered">
   <tbody>
     <tr>
-      <td>ID</td>
-      <td (click)="orderBy('make')">
-        Make
-        <fa-icon *ngIf="query.SortBy === 'make' && query.IsSortAscending"  icon="sort-up"></fa-icon>
-        <fa-icon *ngIf="query.SortBy === 'make' && !query.IsSortAscending"  icon="sort-down"></fa-icon>
+      <td *ngFor="let c of columns">
+        <div *ngIf="c.isSortable" (click)="orderBy(c.key)">
+          {{c.title}}
+          <fa-icon icon="sort-up" *ngIf="query.SortBy === c.key && query.IsSortAscending"></fa-icon>
+          <fa-icon icon="sort-down" *ngIf="query.SortBy === c.key && !query.IsSortAscending"></fa-icon>
+        </div>
+        <div *ngIf="!c.isSortable">{{c.title}}</div>
       </td>
-      <td (click)="orderBy('model')">Model</td>
-      <td (click)="orderBy('contactName')">Contact Name</td>
-      <td></td>
     </tr>
     <tr *ngFor="let item of vehicles">
         <td>{{item.id}}</td>

@@ -23,6 +23,13 @@ export class VehiclesComponent implements OnInit {
   pagination: number = 1;
   noNext: boolean = false;
   quantity: number = 6;
+  columns: any =[
+    {"title":"Id"},
+    {"title":"Make","key":"make","isSortable":"true"},
+    {"title":"Model","key":"model","isSortable":"true"},
+    {"title":"Contact Name","key":"contactName","isSortable":"true"},
+    {"title":""}
+  ];
   ngOnInit() {
     //this.getVehicles(this.pagination,this.quantity);
     this.getAllVehicles();
@@ -59,7 +66,7 @@ export class VehiclesComponent implements OnInit {
     this.router.navigate(['/vehicle/'+id]);
   }
   orderBy(columnName){
-    console.log(this.query.SortBy);
+    console.log(this.columns);
     if(this.query.SortBy === columnName){
       this.query.IsSortAscending = !this.query.IsSortAscending;
     }else{
