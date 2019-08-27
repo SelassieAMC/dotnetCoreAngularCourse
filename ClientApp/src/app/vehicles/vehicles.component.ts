@@ -1,7 +1,6 @@
 import { Router } from '@angular/router';
 import { Vehicle } from './../models/Vehicle';
 import { VehicleService } from './../services/vehicle.service';
-import { Http } from '@angular/http';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -12,14 +11,14 @@ import { Component, OnInit } from '@angular/core';
 export class VehiclesComponent implements OnInit {
 
   constructor(
-    private http:Http, 
     private vehicleService: VehicleService,
     private router:Router
   ) { }
-
-  vehicles : Vehicle[] = [];
+  queryResult : any = {};
   makes : any;
-  query : any = {};
+  query : any = {
+    pageSize:5
+  };
   pagination: number = 1;
   noNext: boolean = false;
   quantity: number = 6;
@@ -31,31 +30,19 @@ export class VehiclesComponent implements OnInit {
     {"title":""}
   ];
   ngOnInit() {
-    //this.getVehicles(this.pagination,this.quantity);
     this.getAllVehicles();
     this.vehicleService.getMakes()
     .subscribe(m => {
       this.makes = m;
     })
   }
-  private getVehicles(pagination,quantity){
-    this.vehicleService.getVehicles(pagination,quantity).subscribe(vs=> {
-      this.vehicles = vs;
-      if(this.vehicles.length < 6){
-        this.noNext = true;
-      }else{
-        this.noNext = false;
-      }
-    });
-  }
 
   private getAllVehicles(){
-    this.vehicleService.getAllVehicles(this.query).subscribe(vs=> {
-      this.vehicles = vs;
+    this.vehicleService.getAllVehicles(this.query).subscribe( result => {
+      this.queryResult = result;
     });
   }
   onFilterChange(){
-    //this.filter.modelId =2;
     this.getAllVehicles();
   }
   resetFilter(){
@@ -75,13 +62,9 @@ export class VehiclesComponent implements OnInit {
     }
     this.getAllVehicles();
   }
+  onPageChanged(page){
+    this.query.page = page;
+    this.getAllVehicles();
+  }
 
-  NextPage(){
-    this.pagination++;
-    this.getVehicles(this.pagination,this.quantity);
-  }
-  BackPage(){
-    this.pagination--;
-    this.getVehicles(this.pagination,this.quantity);
-  }
 }

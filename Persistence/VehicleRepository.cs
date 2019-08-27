@@ -55,8 +55,10 @@ namespace Vegas.Persistence
                 .Take(quantity).ToListAsync();
         }
 
-        public async Task<IEnumerable<Vehicle>> GetVehiclesAsync(VehicleQuery queryObj)
+        public async Task<QueryResult<Vehicle>> GetVehiclesAsync(VehicleQuery queryObj)
         {
+            var result = new QueryResult<Vehicle>();
+
             var query = context.Vehicles
                 .Include(m=>m.Model)
                  .ThenInclude(vr => vr.Make)
@@ -76,9 +78,14 @@ namespace Vegas.Persistence
                 ["contactName"] = v => v.ContactName,
                 ["id"] = v => v.Id
             };
+            
             query = query.ApplyOrdering(columnsMap,queryObj);
+            result.TotalItems = await query.CountAsync();
+            
             query = query.ApplyPaging(queryObj);
-            return await query.ToListAsync();
+            result.Items = await query.ToListAsync();
+
+            return result;
         }
 
         public void Remove(Vehicle vehicle)

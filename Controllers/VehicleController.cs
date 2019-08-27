@@ -140,18 +140,10 @@ namespace Vegas.Controllers
         }
 
         [HttpGet("getVehicles/")]
-        public async  Task<IActionResult> getVehicles(VehicleQueryResource filter){
-            try
-            {
+        public async  Task<QueryResultResource<VehicleResource>> getVehicles(VehicleQueryResource filter){
                 var filterObj = mapper.Map<VehicleQueryResource,VehicleQuery>(filter);
-                var vehsObj = await repository.GetVehiclesAsync(filterObj);
-                var vehicles = mapper.Map<IEnumerable<Vehicle>,IEnumerable<VehicleResource>>(vehsObj);
-                return Ok(vehicles);
-            }
-            catch (System.Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+                var queryResultObj = await repository.GetVehiclesAsync(filterObj);
+                return mapper.Map<QueryResult<Vehicle>,QueryResultResource<VehicleResource>>(queryResultObj);
         }
     }
 }   

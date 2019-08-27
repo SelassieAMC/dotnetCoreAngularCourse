@@ -41,3 +41,6 @@ GET https://localhost:5001/api/vehicle/getVehicles?makeId=8&modelId=3 HTTP/1.1
 
 ###
 GET https://localhost:5001/api/vehicle/getVehicles?sortBy=contactName&IsSortAscending=true HTTP/1.1
+
+###
+GET https://localhost:5001/api/vehicle/getVehicles?makeId=8 HTTP/1.1

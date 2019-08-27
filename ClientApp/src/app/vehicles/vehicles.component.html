@@ -25,7 +25,7 @@
         <div *ngIf="!c.isSortable">{{c.title}}</div>
       </td>
     </tr>
-    <tr *ngFor="let item of vehicles">
+    <tr *ngFor="let item of queryResult.items">
         <td>{{item.id}}</td>
         <td>{{item.make.name}}</td>
         <td>{{item.model.name}}</td>
@@ -34,5 +34,4 @@
     </tr>
   </tbody>
 </table>
-<button class="btn" *ngIf="pagination>1" (click)="BackPage()">Back</button>
-<button class="btn" *ngIf="!noNext" (click)="NextPage()">Next</button>
+<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChanged($event)"></pagination>
