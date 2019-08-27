@@ -14,10 +14,11 @@ export class VehiclesComponent implements OnInit {
     private vehicleService: VehicleService,
     private router:Router
   ) { }
+  private readonly PAGE_SIZE = 6;
   queryResult : any = {};
   makes : any;
   query : any = {
-    pageSize:5
+    pageSize: this.PAGE_SIZE
   };
   pagination: number = 1;
   noNext: boolean = false;
@@ -43,11 +44,15 @@ export class VehiclesComponent implements OnInit {
     });
   }
   onFilterChange(){
+    this.query.page = 1;
     this.getAllVehicles();
   }
   resetFilter(){
-    this.query = {};
-    this.onFilterChange();
+    this.query = {
+      page: 1,
+      pageSize:this.PAGE_SIZE
+    };
+    this.getAllVehicles();
   }
   viewVehicle(id){
     this.router.navigate(['/vehicle/'+id]);
