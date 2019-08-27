@@ -77,6 +77,7 @@ namespace Vegas.Persistence
                 ["id"] = v => v.Id
             };
             query = query.ApplyOrdering(columnsMap,queryObj);
+            query = query.ApplyPaging(queryObj);
             return await query.ToListAsync();
         }
 
