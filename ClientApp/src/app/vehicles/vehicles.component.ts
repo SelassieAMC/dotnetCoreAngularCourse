@@ -1,5 +1,4 @@
 import { Router } from '@angular/router';
-import { Vehicle } from './../models/Vehicle';
 import { VehicleService } from './../services/vehicle.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -53,9 +52,6 @@ export class VehiclesComponent implements OnInit {
       pageSize:this.PAGE_SIZE
     };
     this.getAllVehicles();
-  }
-  viewVehicle(id){
-    this.router.navigate(['/vehicle/'+id]);
   }
   orderBy(columnName){
     console.log(this.columns);

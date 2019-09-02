@@ -1,6 +1,6 @@
 <h1>New Vehicle</h1>
 <p>
-  {{vehicle | json}}
+  <!-- {{vehicle | json}} -->
 </p>
 <form #f="ngForm" (ngSubmit)="submit()">
   <div class="form-group">
@@ -49,5 +49,5 @@
     <input type="text" name="email" id="contactEmail" class="form-control" [(ngModel)]="vehicle.contact.email" >
   </div>
   <button class="btn btn-primary" [disabled]="!f.valid" type="submit">Save</button>
-  <button *ngIf="vehicle.id" class="btn btn-danger" type="button" (click)="delete()">Delete</button>
+  <button *ngIf="vehicle.id" style="margin-left: 5px;" class="btn btn-danger" type="button" (click)="delete()">Delete</button>
 </form>

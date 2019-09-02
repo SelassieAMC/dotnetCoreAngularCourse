@@ -1,0 +1,44 @@
+<h2>Vehicle Details</h2>
+<div *ngIf="vehicle">
+    <ngb-tabset>
+        <ngb-tab title="Vehicle">
+          <ng-template ngbTabContent>
+            <h1>Basics</h1>
+            <ul>
+              <li>Make: {{vehicle.make.name}}</li>
+            </ul>
+            <ul>
+              <li>Model: {{vehicle.model.name}}</li>
+            </ul>
+            <ul>
+              <li>Registered: {{vehicle.isRegistered}}</li>
+            </ul>
+            <h1>Features</h1>
+            <ul *ngFor="let item of vehicle.features">
+              <li>{{item.name}}</li>
+            </ul>
+            <h1>Contact</h1>
+            <ul>
+              <li>Name: {{vehicle.contact.name}}</li>
+            </ul>
+            <ul>
+              <li>Phone: {{vehicle.contact.phone}}</li>
+            </ul>
+            <ul>
+              <li>Email: {{vehicle.contact.email}}</li>
+            </ul>
+          </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Photos">
+          <ng-template ngbTabContent>
+      
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+</div>
+
+<div>
+    <button class="btn btn-primary" (click)="goToEditForm()">Edit</button>
+    <button class="btn btn-danger" style="margin-left: 5px;" (click)="deleteVehicle()">Delete</button>
+    <button class="btn btn-default" style="margin-left: 5px;" (click)="goToVehicleList()">View All Vehicles</button>
+</div>
