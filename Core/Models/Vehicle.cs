@@ -12,6 +12,7 @@ namespace Vegas.Core.Models
         public Vehicle() 
         {
             this.VehicleFeatures = new Collection<VehicleFeature>();
+            this.Photos = new Collection<Photo>();
         }
         public int Id { get; set; }
         [Required]
@@ -27,6 +28,7 @@ namespace Vegas.Core.Models
         [MaxLength(255)]
         public string ContactEmail { get; set; }
         public ICollection<VehicleFeature> VehicleFeatures { get; set; }
+        public ICollection<Photo> Photos { get; set; }
         public DateTime LastUpdate { get; set; }
     }
 }
