@@ -47,11 +47,16 @@ GET https://localhost:5001/api/vehicle/getVehicles?makeId=8 HTTP/1.1
 
 ###
 POST https://localhost:5001/api/vehicle/34/photos HTTP/1.1
-Content-Type: multipart/form-data; boundary="----=_Part_6_27950002.1567640581694"
+Content-Type: multipart/form-data; boundary=----=_Part_6_27950002.1567640581694
 
 ----=_Part_6_27950002.1567640581694
 Content-Disposition: form-data; name="file"; filename="horarios_v1.png"
-Content-Type: image/png
 
-< "C:\Users\aclavime.EPMCC-POB\Pictures\horarios_v1.png"
-----=_Part_6_27950002.1567640581694--
+< "./horarios_v1.png"
+----=_Part_6_27950002.1567640581694
+
+
+###
+POST https://localhost:5001/api/vehicle/34/photos?file=file%3AC%3A%5CUsers%5Caclavime.EPMCC-POB%5CPictures%5Chorarios_v1.png HTTP/1.1 
+Content-Type:multipart/form-data; boundary=----=_Part_121_8356673.1567641186203
+Content-Disposition: form-data; name="file"; filename="horarios_v1.png"
