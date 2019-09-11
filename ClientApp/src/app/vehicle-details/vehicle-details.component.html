@@ -31,7 +31,8 @@
         </ngb-tab>
         <ngb-tab title="Photos">
           <ng-template ngbTabContent>
-      
+            <input type="file" (change)="uploadPhoto()" #fileInput>  
+            <img *ngFor="let photo of photos" src="/uploads/{{photo.fileName}}" class="img-thumbnail">
           </ng-template>
         </ngb-tab>
       </ngb-tabset>

@@ -25,6 +25,7 @@ namespace Vegas
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<PhotoSettings>(Configuration.GetSection("PhotoSettings"));
+            services.AddScoped<IPhotoRepository,PhotoRepository>();
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddAutoMapper(typeof(Startup));

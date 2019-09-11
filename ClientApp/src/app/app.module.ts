@@ -21,6 +21,7 @@ import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
 import { VehiclesComponent } from './vehicles/vehicles.component';
 import { VehicleService } from './services/vehicle.service';
 import { VehicleDetailsComponent } from './vehicle-details/vehicle-details.component';
+import { PhotoService } from './services/photo.service';
 
 Sentry.init({
   dsn: 'https://5097dbc586e04ca6be34465a8dcab9e3@sentry.io/1532965'
@@ -59,7 +60,7 @@ Sentry.init({
   ],
   providers: [
     {provide: ErrorHandler, useClass:AppErrorHandler},
-    VehicleService
+    VehicleService, PhotoService
   ],
   bootstrap: [AppComponent]
 })
