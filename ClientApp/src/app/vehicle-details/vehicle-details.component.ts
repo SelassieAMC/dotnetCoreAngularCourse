@@ -65,7 +65,7 @@ export class VehicleDetailsComponent implements OnInit {
   uploadPhoto(){
     var nativeElement: HTMLInputElement = this.fileInput.nativeElement;
     
-    this.progressService.uploadProgress
+    this.progressService.startTracking()
       .subscribe(progress => {
         console.log(progress);
         this.progress = progress;
