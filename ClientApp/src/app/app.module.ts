@@ -1,3 +1,4 @@
+import { BrowserXhrWithProgress, ProgressService } from './services/progress.service';
 import * as Sentry from '@sentry/browser';
 import { AppErrorHandler } from './app.error-handlers';
 import { BrowserModule } from '@angular/platform-browser';
@@ -5,7 +6,7 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { HttpModule } from '@angular/http';
+import { HttpModule, BrowserXhr } from '@angular/http';
 import { ToastrModule } from 'ng6-toastr-notifications';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -60,7 +61,8 @@ Sentry.init({
   ],
   providers: [
     {provide: ErrorHandler, useClass:AppErrorHandler},
-    VehicleService, PhotoService
+    {provide: BrowserXhr, useClass:BrowserXhrWithProgress},
+    VehicleService, PhotoService,ProgressService
   ],
   bootstrap: [AppComponent]
 })
