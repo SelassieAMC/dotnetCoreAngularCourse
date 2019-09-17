@@ -31,7 +31,12 @@
         </ngb-tab>
         <ngb-tab title="Photos">
           <ng-template ngbTabContent>
-            <input type="file" (change)="uploadPhoto()" #fileInput>  
+            <input type="file" (change)="uploadPhoto()" #fileInput>
+            <div class="progress" *ngIf="progress && progress.percentaje < 100">
+              <div class="progress-bar" [style.width]="progress.percentaje + '%'">
+                <span class="sr-only">{{progress.percentaje}}</span>
+              </div>
+            </div>  
             <img *ngFor="let photo of photos" src="/uploads/{{photo.fileName}}" class="img-thumbnail">
           </ng-template>
         </ngb-tab>

@@ -16,6 +16,7 @@ export class VehicleDetailsComponent implements OnInit {
   vehicle: any;
   vehicleId:number;
   photos: any = [];
+  progress : any = {};
   
   constructor(    
     private route: ActivatedRoute,
@@ -65,7 +66,10 @@ export class VehicleDetailsComponent implements OnInit {
     var nativeElement: HTMLInputElement = this.fileInput.nativeElement;
     
     this.progressService.uploadProgress
-      .subscribe(progress => console.log(progress));
+      .subscribe(progress => {
+        console.log(progress);
+        this.progress = progress;
+      },null,()=>{this.progress= null});
 
     this.photoService.upload(this.vehicleId, nativeElement.files[0])
       .subscribe(res => {
