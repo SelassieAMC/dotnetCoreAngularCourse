@@ -38,7 +38,7 @@
     "ng6-toastr-notifications": "^1.0.4",
     "popper.js": "^1.14.7",
     "rxjs": "^6.0.0",
-    "underscore": "^1.9.1",
+    "underscore": "^1.12.1",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
